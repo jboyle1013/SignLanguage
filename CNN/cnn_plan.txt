@@ -1,0 +1,56 @@
+CNN PLAN:
+    --- Preprocessing ---
+
+Input a list of tensors
+    - A number of frames per video
+    - B number of points from mediapipe
+    video_tensor = [
+  Video example: (A = 30, B = 21, 3 -> (x,y,z coordinates of a point))
+  //Frame 1
+  [[x1_point1, y1_point1, z1_point1], [x1_point2, y1_point2, z1_point2], ..., [x1_pointY, y1_pointY, z1_pointY]],
+  // Frame 2
+  [[x2_point1, y2_point1, z2_point1], [x2_point2, y2_point2, z2_point2], ..., [x2_pointY, y2_pointY, z2_pointY]],
+  ...
+  // Frame X
+  [[xX_point1, yX_point1, zX_point1], [xX_point2, yX_point2, zX_point2], ..., [xX_pointY, yX_pointY, zX_pointY]]
+]
+
+    --- CNN ---
+Layers:
+    1) 3D Convultional Layer
+    2) 3D Pooling Layer
+    3) Flatten Layer
+    4) Fully Connected Layer
+    5) Dropout Layer
+    6) Output Layer
+
+    3D Convolutional Layer
+        - Purpose: Applies a filter or kernel to the input tensor, which spans spatial and temporal dimensions. 
+            This layer detects and maps out changes or features (like movements or shapes) across the input sequence of frames.
+        - Output: Produces a series of feature maps that represent different aspects of the input data, 
+            emphasizing where certain types of changes or features occur over space and time.
+    3D Pooling Layer
+        - Purpose: Reduces the spatial-temporal dimensions of the feature maps from the convolutional layer. 
+            It does this by selecting the most significant feature (often the maximum value) within a local region of the feature map.
+        - Output: Provides a simplified, condensed version of the feature maps, retaining only the most important features while reducing data volume and complexity, 
+            which helps in speeding up computations and reducing overfitting.
+    Flatten Layer
+        - Purpose: Converts the multi-dimensional output of the pooling layer into a one-dimensional array. 
+            This transformation is necessary because the fully connected layers that follow require input in a flat, vector form.
+        - Output: Produces a single long vector of features, ready to be fed into the fully connected layers.
+    Fully Connected Layer
+        - Purpose: Takes the flattened feature vector and performs high-level reasoning to map the detected features to the outputs. 
+            Each neuron in a fully connected layer has the potential to consider all features to determine the final outputs.
+        - Output: Outputs the weighted sum of the inputs it receives, passed through an activation function, 
+            which can introduce non-linearity to the learning process.
+    Dropout Layer
+        - Purpose: Randomly sets a fraction of input units to zero during training at each update step. 
+            This prevents neurons from co-adapting too much, enhances the generalization of the model, and essentially acts as a form of training regularization.
+        - Output: A thinned version of the input with some units zeroed out, different at each step of training, 
+            which helps to mimic the effect of training different neural network architectures.
+    Output Layer
+        - Purpose: The final layer that uses the learned high-level features from the fully connected layers to make a prediction, 
+            such as classifying the ASL gestures. This layer typically uses a softmax activation function if it's a multi-class classification problem, 
+            which turns logits into probabilities that sum to one.
+        - Output: Provides the final probabilities for each class, representing the network's prediction of what gesture is being performed based on the input video sequence.
+
