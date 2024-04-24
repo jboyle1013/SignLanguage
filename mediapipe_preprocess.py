@@ -28,10 +28,7 @@ def get_landmark_points(results):
     # get pose features
     pose = np.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]).flatten() \
     if results.pose_landmarks else np.zeros(num_landmarks_per_pose*num_points_per_pose_landmark)
-    
-    # get face features
-    face = np.array([[res.x, res.y, res.z] for res in results.face_landmarks.landmark]).flatten() \
-    if results.face_landmarks else np.zeros(num_landmarks_per_face*num_points_per_landmark)
+
     
     # get left hand features
     left_hand = np.array([[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]).flatten() \
