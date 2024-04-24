@@ -1,3 +1,12 @@
+Notes: 
+    - For the Conv3D and Dense layers with relu , we should add "kernel_initializer='he_uniform'" since  
+      This is a weights initialization technique, specifically for Relu, that tries to make the variance 
+      of the outputs of a layer to be equal to the variance of its inputs.
+
+    - We should test if adding a 3d droppout, "SpatialDropout3D", performs better than just the normal         1D dropout. https://keras.io/api/layers/regularization_layers/spatial_dropout3d/
+
+
+
 CNN PLAN:
     --- Preprocessing ---
 
