@@ -49,6 +49,8 @@ def get_labels(input_dir, output_dir):
     # Loop through all directories in the input directory
     for video_num in os.listdir(input_dir):
         video_path = os.path.join(input_dir, video_num)
+        video_path = "labels/bbox".join(video_path.rsplit("frames", 1))
+        print(video_path)
         if os.path.isdir(video_path):
             # Get all text files in this directory
             txt_files = [f for f in os.listdir(video_path) if f.endswith('.txt')]
@@ -68,34 +70,34 @@ def get_labels(input_dir, output_dir):
     return labels_dict
 
 # Training Paths
-train_input_path = '../Data/data-subset/train/frames'
-train_output_path = '../Data/data-subset/train/processed'
+train_input_path = './Data/data-subset/train/frames'
+train_output_path = './Data/data-subset/train/processed'
 
-train_labels = '../Data/data-subset/train/bbox'
-train_labels_out = '../Data/data-subset/train'
+train_labels = './Data/data-subset/train/bbox'
+train_labels_out = './Data/data-subset/train'
 
 
 # Val Paths
-val_input_path = '../Data/data-subset/val/frames'
-val_output_path = '../Data/data-subset/val/processed'
+val_input_path = './Data/data-subset/val/frames'
+val_output_path = './Data/data-subset/val/processed'
 
-val_labels = '../Data/data-subset/val/bbox'
-val_labels_out = '../Data/data-subset/val'
+val_labels = './Data/data-subset/val/bbox'
+val_labels_out = './Data/data-subset/val'
 
 
 # Testing Paths
-test_input_path = '../Data/data-subset/train/frames'
-test_output_path = '../Data/data-subset/train/processed'
+test_input_path = './Data/data-subset/train/frames'
+test_output_path = './Data/data-subset/train/processed'
 
-test_labels = '../Data/data-subset/test/bbox'
-test_labels_out = '../Data/data-subset/test'
+test_labels = './Data/data-subset/test/bbox'
+test_labels_out = './Data/data-subset/test'
 
 
 
 # Call the function
-resize_images(train_input_path, train_output_path)
-resize_images(val_input_path, val_output_path)
-resize_images(test_input_path, test_output_path)
+# resize_images(train_input_path, train_output_path)
+# resize_images(val_input_path, val_output_path)
+# resize_images(test_input_path, test_output_path)
 
 get_labels(train_input_path, train_labels_out)
 get_labels(val_input_path, val_labels_out)

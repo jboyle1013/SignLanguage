@@ -54,6 +54,8 @@ def process_video_and_pad_features(video_folder, model, target_length=201):
         image = cv2.imread(img_path)
         _, results = mediapipe_detection(image, model)
         features = get_landmark_points(results)
+        print(features.shape)
+        exit()
         features_list.append(features)
     
     # Convert list of features to a numpy array
@@ -85,7 +87,7 @@ def process_all_videos(root_folder, output_folder, model):
 mp_holistic = mp.solutions.holistic
 holistic = mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
-image_folder = '../Data/data-subset/train/processed'
-output_dir = '../Data/data-subset/train/pFeatures'
+image_folder = './Data/data-subset/train/processed'
+output_dir = './Data/data-subset/train/pFeatures'
 os.makedirs(output_dir, exist_ok=True)
 process_all_videos(image_folder, output_dir, holistic)
