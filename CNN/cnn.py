@@ -37,8 +37,8 @@ class Model():
         self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
         return self.model
 
-    def fit_model(self, X_train, y_train):
-        self.model.fit(X_train, y_train, epochs=200, callbacks=[tbCallbacks], batch_size=X_train.shape[0])
+    def fit_model(self, X_train, y_train, validation):
+        self.model.fit(X_train, y_train, epochs=200, callbacks=[tbCallbacks], batch_size=X_train.shape[0], validation_data=validation)
         
         model_list = glob("./model_*")
         if len(model_list) != 0:
@@ -72,7 +72,7 @@ class Model():
 
 if '__main__' == __name__:
     input_train_dir = "./Data/data-subset/train/"
-    # input_test_dir = "../Data/data-subset/train/"
+    input_test_dir = "./Data/data-subset/train/"
     # input_val_dir = "../Data/data-subset/val/"
     y_train = load_dataset(input_train_dir + "labels.npy")
     features_npy_file_paths = glob(input_train_dir + "pFeatures/*")
@@ -89,6 +89,22 @@ if '__main__' == __name__:
     y_train = np.array([y_label_dic[label] for label in y_train])
     y_train = to_categorical(y_train).astype(int)
 
+
+    y_test = load_dataset(input_test_dir + "labels.npy")
+    features_npy_file_paths = glob(input_test_dir + "pFeatures/*")
+    input_features = [load_dataset(npy) for npy in features_npy_file_paths]
+    batch_size = 45
+    X_test = np.array(input_features)
+    print(X_train.shape)
+    
+    num_classes = len(collections.Counter(y_test.flatten()).items())
+    # print(f"Num classes = {num_classes}\n")
+    # print(y_train[:10])
+    y_label_list = np.sort(np.unique(y_test))
+    y_label_dic = {label:i for (label,i) in zip(y_label_list,range(len(y_label_list)))}
+    y_test = np.array([y_label_dic[label] for label in y_test])
+    y_test = to_categorical(y_test).astype(int)
+
     #print(y_train[:10])
     #print()
     #print(y_train.shape)
@@ -101,7 +117,8 @@ if '__main__' == __name__:
     for _ in range(X_train.shape[0] // batch_size):
         train = X_train[i:i+batch_size]
         print(train.shape)
-        model.fit_model(X_train, y_train)
+        validation = (X_test[i:i+batch_size],y_test[i:i+batch_size])
+        model.fit_model(X_train, y_train, validation)
         i += batch_size
     
     
