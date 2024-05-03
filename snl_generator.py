@@ -139,7 +139,7 @@ class Sign_Dataset:
         gloss_cat = x1['gloss_cat']
         frame_indices = self.get_frame_indices(frame_start, frame_end, self.sample_strategy, self.num_samples)
         frames = self.load_video_frames(video_id, frame_indices)
-        body_features, left_features, right_features = self._load_poses(video_id, frame_start, frame_end, self.sample_strategy, self.num_samples)
+        body_features, left_features, right_features = self._load_poses(video_id, frame_start, frame_end, frame_indices, self.num_samples)
         bbox = self.load_bounding_box(video_id, frame_indices)
         if self.video_transforms:
             body_features = self.video_transforms(body_features)
@@ -152,7 +152,18 @@ class Sign_Dataset:
 
     def get_frame_indices(self, frame_start, frame_end, sample_strategy, num_samples):
         """Assumes frame indices are to be sampled sequentially for simplicity."""
-        return list(range(frame_start, frame_end + 1))[:num_samples]
+        if sample_strategy == 'rnd_start':
+            frames_to_sample = rand_start_sampling(frame_start, frame_end, num_samples)
+        elif sample_strategy == 'seq':
+            frames_to_sample = sequential_sampling(frame_start, frame_end, num_samples)
+        elif sample_strategy == 'k_copies':
+            frames_to_sample = k_copies_fixed_length_sequential_sampling(frame_start, frame_end, num_samples,
+                                                                 self.num_copies)
+        else:
+            frames_to_sample = list(range(frame_start, frame_end + 1))[:num_samples]
+
+
+        return frames_to_sample
 
 
     def _make_dataset(self, index_file_path, split):
@@ -194,22 +205,13 @@ class Sign_Dataset:
                     'frame_start': frame_start,
                     'frame_end': frame_end
                 })
-    def _load_poses(self, video_id, frame_start, frame_end, sample_strategy, num_samples):
+    def _load_poses(self, video_id, frame_start, frame_end, frames_to_sample, num_samples):
         """ Load frames of a video. Start and end indices are provided just to avoid listing and sorting the directory unnecessarily.
          """
         body_poses = []
         left_poses = []
         right_poses = []
 
-        if sample_strategy == 'rnd_start':
-            frames_to_sample = rand_start_sampling(frame_start, frame_end, num_samples)
-        elif sample_strategy == 'seq':
-            frames_to_sample = sequential_sampling(frame_start, frame_end, num_samples)
-        elif sample_strategy == 'k_copies':
-            frames_to_sample = k_copies_fixed_length_sequential_sampling(frame_start, frame_end, num_samples,
-                                                                         self.num_copies)
-        else:
-            raise NotImplementedError('Unimplemented sample strategy found: {}.'.format(sample_strategy))
         p_split = ['body', 'left', 'right']
         for i in frames_to_sample:
             pose_paths = [f'{self.pose_root}/{video_id}/image_{i:05}_body_featurematrix.npy', f'{self.pose_root}/{video_id}/image_{i:05}_hand_left_featurematrix.npy',
@@ -335,7 +337,7 @@ if __name__ == '__main__':
                                  img_transforms=None, video_transforms=None,
                                  num_samples=num_samples)
 
-    test = train_dataset.__getitem__(42)
+    test = train_dataset.__getitem__(0)
 
     x = 5
     # train_dataset = train_dataset.map(preprocess_function, num_parallel_calls=tf.data.experimental.AUTOTUNE)
