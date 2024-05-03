@@ -2,15 +2,13 @@ import json
 import math
 import os
 import random
-
 import numpy as np
-
 import cv2
-
 import tensorflow as tf
-
-
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+from configs import *
+
+
 
 
 def compute_difference(x):
@@ -47,18 +45,18 @@ class Sign_Dataset:
                  img_transforms=None, video_transforms=None, test_index_file=None):
         assert os.path.exists(index_file_path), "Non-existent indexing file path: {}.".format(index_file_path)
         assert os.path.exists(pose_root), "Path to poses does not exist: {}.".format(pose_root)
-
+        self.data_root = DATASET_PATH
         self.data = []
         self.label_encoder, self.onehot_encoder = LabelEncoder(), OneHotEncoder(categories='auto')
 
         if type(split) == 'str':
             split = [split]
-        self.body_adj_matrix =np.load('dataset/dataset/adj_matrix_body.npy')
-        self.left_adj_matrix = np.load('dataset/dataset/adj_matrix_left.npy')
-        self.right_adj_matrix = np.load('dataset/dataset/adj_matrix_right.npy')
+        self.body_adj_matrix =np.load(f'{self.data_root}/adj_matrix_body.npy')
+        self.left_adj_matrix = np.load(f'{self.data_root}/adj_matrix_left.npy')
+        self.right_adj_matrix = np.load(f'{self.data_root}/adj_matrix_right.npy')
         self.test_index_file = test_index_file
         self._make_dataset(index_file_path, split)
-        self.data_root = 'dataset/dataset'
+
         self.index_file_path = index_file_path
 
         self.framename = 'image_{}_keypoints.json'
@@ -318,9 +316,9 @@ def k_copies_fixed_length_sequential_sampling(frame_start, frame_end, num_sample
 
 
 if __name__ == '__main__':
-    root = '/home/realclevername/PycharmProjects/SignLanguage/'
+    root = 'C:/Users/jorda/Documents/SignLanguage'
 
-    split_file = os.path.join(root, 'dataset/dataset/asl300.json')
+    split_file = os.path.join(root, f'{DATASET_PATH}/asl300.json')
     pose_data_root = os.path.join(root, 'WSASL/data/pose_per_individual_videos')
 
     num_samples = 64
