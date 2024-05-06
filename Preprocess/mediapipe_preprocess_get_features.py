@@ -9,8 +9,6 @@ from tqdm import tqdm
 This script is to be used on a preprocessed directory. It will use mediapipe to extract the features.
 '''
 
-features_directory = '.subset/train/pFeatures'
-
 '''
 This will create a tensor of shape [3, num_landmarks, num_features]
 where the first dimension is for pose, left hand, and riht hand

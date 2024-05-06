@@ -37,9 +37,12 @@ class Model():
         self.model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
         return self.model
 
-    def fit_model(self, X_train, y_train, validation):
-        self.model.fit(X_train, y_train, epochs=200, callbacks=[tbCallbacks], batch_size=X_train.shape[0], validation_data=validation)
-        
+    def fit_model(self, X_train, y_train, validation = None):
+        if validation != None:
+            self.model.fit(X_train, y_train, epochs=200, callbacks=[tbCallbacks], batch_size=X_train.shape[0], validation_data=validation, validation_batch_size=validation[0].shape[0])
+        else:
+            self.model.fit(X_train, y_train, epochs=200, callbacks=[tbCallbacks], batch_size=X_train.shape[0])
+            
         model_list = glob("./model_*")
         if len(model_list) != 0:
             model_nums = [re.findall(r'\d+', file_name)[0] for file_name in model_list]
@@ -69,56 +72,117 @@ class Model():
         self.predictions = indexes_of_highest_prob_for_each_row
         return self.predictions
 
+# this function loads the labels and features from the correct npy files given
+# the input directory path to ex. train/ or test/ or val/ and returns the 
+# corresponding X matrix and y matrix
+# 
+def get_X_and_y_from_dir(input_dir):
+    y = load_dataset(input_dir + "labels.npy")
+    features_npy_file_paths = glob(input_dir + "pFeatures/*")
+    input_features = [load_dataset(npy) for npy in features_npy_file_paths]
+    X = np.array(input_features)
+    return X, y
+
+# This function returns a one hot encoded y matrix and a list of the labels
+# where the index correspondes to the one hot encoded placement.
+# If you want a label for the one hot encoded 1000 then use
+# y_label_list[np.argmax([1,0,0,0])] or y_label_list[0] to get the label
+# since 0 corresponds to the index of the 1 in the one hot code.
+# The y_label_dic is also returned to get the index given the label as a key
+def get_one_hot_encoded_y_and_corresponding_list(y, num_classes = None):
+    y_label_list = np.sort(np.unique(y))
+    y_label_dic = {label:i for (label,i) in zip(y_label_list,range(len(y_label_list)))}
+    y = np.array([y_label_dic[label] for label in y])
+    if num_classes == None:
+        y_one_hot = to_categorical(y).astype(int)
+    else:
+        y_one_hot = to_categorical(y, num_classes).astype(int)
+    return y_one_hot, y_label_list, y_label_dic
 
 if '__main__' == __name__:
-    input_train_dir = "./Data/data-subset/train/"
-    input_test_dir = "./Data/data-subset/train/"
-    # input_val_dir = "../Data/data-subset/val/"
-    y_train = load_dataset(input_train_dir + "labels.npy")
-    features_npy_file_paths = glob(input_train_dir + "pFeatures/*")
-    input_features = [load_dataset(npy) for npy in features_npy_file_paths]
-    batch_size = 45
-    X_train = np.array(input_features)
-    print(X_train.shape)
+    data_dir = "../data/"
+    input_train_dir = data_dir + "train/"
+    input_test_dir = data_dir + "test/"
+    input_val_dir = data_dir + "val/"
+    
+    X_train, y_train = get_X_and_y_from_dir(input_train_dir)
     
     num_classes = len(collections.Counter(y_train.flatten()).items())
-    # print(f"Num classes = {num_classes}\n")
-    # print(y_train[:10])
-    y_label_list = np.sort(np.unique(y_train))
-    y_label_dic = {label:i for (label,i) in zip(y_label_list,range(len(y_label_list)))}
-    y_train = np.array([y_label_dic[label] for label in y_train])
-    y_train = to_categorical(y_train).astype(int)
-
-
-    y_test = load_dataset(input_test_dir + "labels.npy")
-    features_npy_file_paths = glob(input_test_dir + "pFeatures/*")
-    input_features = [load_dataset(npy) for npy in features_npy_file_paths]
-    batch_size = 45
-    X_test = np.array(input_features)
-    print(X_train.shape)
     
-    num_classes = len(collections.Counter(y_test.flatten()).items())
-    # print(f"Num classes = {num_classes}\n")
-    # print(y_train[:10])
-    y_label_list = np.sort(np.unique(y_test))
-    y_label_dic = {label:i for (label,i) in zip(y_label_list,range(len(y_label_list)))}
-    y_test = np.array([y_label_dic[label] for label in y_test])
-    y_test = to_categorical(y_test).astype(int)
+    X_test, y_test = get_X_and_y_from_dir(input_test_dir)
+    X_val, y_val = get_X_and_y_from_dir(input_val_dir)
+    
+    y_one_hot_train, y_train_label_one_hot_list, y_train_label_one_hot_dict = get_one_hot_encoded_y_and_corresponding_list(y_train)
+    #y_val_corresponding = np.array([y_train_label_one_hot_dict[label] for label in y_val.flatten()])
+    #y_one_hot_val = to_categorical(y_val_corresponding, num_classes=num_classes).astype(int)
+    y_one_hot_val, _, _ = get_one_hot_encoded_y_and_corresponding_list(y_val, num_classes)
+    #y_one_hot_test, y_test_label_one_hot_list,_ = get_one_hot_encoded_y_and_corresponding_list(y_test)
 
-    #print(y_train[:10])
-    #print()
-    #print(y_train.shape)
+    print(f"Num classes = {num_classes}\n") 
+    print(f"X_train {X_train.shape}")
+    print(f"X_test {X_test.shape}")
+    print(f"X_val {X_val.shape}")
+    
+    print(f"y_train {y_train.shape}")
+    print(f"y_test {y_test.shape}")
+    print(f"y_val {y_val.shape}")
+    
+    
     model = Model()
     sample_shape = (X_train.shape[1],X_train.shape[2])
     model.create_model(sample_shape, num_classes)
     model.summery()
-    train = []
-    i = 0
-    for _ in range(X_train.shape[0] // batch_size):
-        train = X_train[i:i+batch_size]
-        print(train.shape)
-        validation = (X_test[i:i+batch_size],y_test[i:i+batch_size])
-        model.fit_model(X_train, y_train, validation)
-        i += batch_size
+    validation = (X_val,y_one_hot_val)
+    model.fit_model(X_train, y_one_hot_train, validation)
+    
+    
+    
+    
+    
+    
+    # y_train = load_dataset(input_train_dir + "labels.npy")
+    # features_npy_file_paths = glob(input_train_dir + "pFeatures/*")
+    # input_features = [load_dataset(npy) for npy in features_npy_file_paths]
+    # X_train = np.array(input_features)
+    # print(f"X_train {X_train.shape}")
+    
+    # num_classes = len(collections.Counter(y_train.flatten()).items())
+    # print(f"Num classes = {num_classes}\n")
+    # print(f"y_train {y_train.shape}")
+    # # print(y_train[:10])
+    # y_label_list = np.sort(np.unique(y_train))
+    # y_label_dic = {label:i for (label,i) in zip(y_label_list,range(len(y_label_list)))}
+    # y_train = np.array([y_label_dic[label] for label in y_train])
+    # y_train = to_categorical(y_train).astype(int)
+    # print(f"y_train {y_train.shape}")
+
+    # y_test = load_dataset(input_test_dir + "labels.npy")
+    # features_npy_file_paths = glob(input_test_dir + "pFeatures/*")
+    # input_features = [load_dataset(npy) for npy in features_npy_file_paths]
+    # X_test = np.array(input_features)
+    
+    
+    # y_label_list = np.sort(np.unique(y_test))
+    # y_label_dic = {label:i for (label,i) in zip(y_label_list,range(len(y_label_list)))}
+    # y_test = np.array([y_label_dic[label] for label in y_test])
+    # y_test = to_categorical(y_test).astype(int)
+    # print(f"y_test {y_test.shape}")
+    #print(y_train[:10])
+    #print()
+    #print(y_train.shape)
+    # model = Model()
+    # sample_shape = (X_train.shape[1],X_train.shape[2])
+    #model.create_model(sample_shape, num_classes)
+    #model.summery()
+    #validation = (X_val,y_val)
+    #model.fit_model(X_train, y_train, validation)
+    # train = []
+    # i = 0
+    # for _ in range(X_train.shape[0] // batch_size):
+    #     train = X_train[i:i+batch_size]
+    #     print(f"train {train.shape}")
+    #     validation = (X_test[i:i+batch_size],y_test[i:i+batch_size])
+    #     #model.fit_model(X_train, y_train, validation)
+    #     i += batch_size
     
     
