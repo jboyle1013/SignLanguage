@@ -4,10 +4,57 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9c22cb22-bfe7-40ee-b08f-d101b71dcff7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Preprocessing/filteragain.py" afterDir="false" />
+    <list default="true" id="9c22cb22-bfe7-40ee-b08f-d101b71dcff7" name="Changes" comment="Cleaned Preprocess Code">
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Preprocessing/preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/Preprocessing/preprocess300.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/MS-ASL_jsons/C-UDA-0.1_annotated_discussion.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/MS-ASL_jsons/MSASL_classes.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/MS-ASL_jsons/MSASL_synonym.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/MS-ASL_jsons/MSASL_test.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/MS-ASL_jsons/MSASL_train.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/MS-ASL_jsons/MSASL_val.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/MS-ASL_jsons/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/WSASL/configs.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/WSASL/configs/asl300.ini" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/WSASL/configs/ctest.ini" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/WSASL/gen_features.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/WSASL/layers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/WSASL/models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/WSASL/test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/WSASL/test_tgcn.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/WSASL/tgcn_model.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/WSASL/train_utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/WSASL/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/WSASL/videotransforms.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/acquire_new_dataset_code/acquire_and_preprocess.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/acquire_new_dataset_code/asl100.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/acquire_new_dataset_code/asl300.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/acquire_new_dataset_code/preprocess.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/acquire_new_dataset_code/video_downloader.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/adjacency_matrix.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/config.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/configs.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/filterasljson.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/makefeaturematrices.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/older files/Dataset.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/older files/acquire_data.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/older files/config.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/older files/extract_zipped_dataset.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/older files/frames_data.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/older files/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/older files/top_100.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/older files/top_100word_frequencies.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/older files/video_data.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/older files/word_frequencies.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/older files/wordcount.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/output/asl300.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/snl_generator.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/snl_model.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Old Unused Files/train_model.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Preprocessing/splits/asl20.json" beforeDir="false" afterPath="$PROJECT_DIR$/Preprocessing/splits/asl20.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Preprocessing/video_downloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/Preprocessing/video_downloader.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -85,6 +132,9 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Jordan\Documents\Machine Learning\FinalProject\SignLanguage\Preprocessing" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Jordan\Documents\Machine Learning\FinalProject\SignLanguage\Preprocessing\splits" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="makefeaturematrices" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
@@ -132,12 +182,33 @@
       <workItem from="1714751132977" duration="5801000" />
       <workItem from="1714849904552" duration="66000" />
       <workItem from="1714963119260" duration="10000" />
-      <workItem from="1715059773494" duration="977000" />
+      <workItem from="1715059773494" duration="1686000" />
     </task>
+    <task id="LOCAL-00001" summary="Cleaned Preprocess Code">
+      <option name="closed" value="true" />
+      <created>1715060941008</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1715060941008</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Cleaned Preprocess Code">
+      <option name="closed" value="true" />
+      <created>1715061044452</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1715061044452</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Cleaned Preprocess Code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cleaned Preprocess Code" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/SignLanguage$makefeaturematrices.coverage" NAME="makefeaturematrices Coverage Results" MODIFIED="1714758863765" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

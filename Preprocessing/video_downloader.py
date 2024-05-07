@@ -143,9 +143,9 @@ def download_yt_videos(indexfile, saveto='raw_videos'):
 
 if __name__ == '__main__':
     logging.info('Start downloading non-youtube videos.')
-    download_nonyt_videos('start_kit/asl1000.json')
+    download_nonyt_videos('Preprocessing/splits/asl20.json')
 
     check_youtube_dl_version()
     logging.info('Start downloading youtube videos.')
-    download_yt_videos('start_kit/asl1000.json')
+    download_yt_videos('Preprocessing/splits/asl20.json')
 
