@@ -10,10 +10,8 @@ import random
 import logging
 logging.basicConfig(filename='download_{}.log'.format(int(time.time())), filemode='w', level=logging.DEBUG)
 
-
-
 # Set this to youtube-dl if you want to use youtube-dl.
-# The README for an explanation regarding yt-dlp vs youtube-dl.
+# The the README for an explanation regarding yt-dlp vs youtube-dl.
 youtube_downloader = "yt-dlp"
 
 def request_video(url, referer=''):
@@ -80,7 +78,6 @@ def download_nonyt_videos(indexfile, saveto='raw_videos'):
 
     if not os.path.exists(saveto):
         os.mkdir(saveto)
-
     for entry in tqdm(content):
         gloss = entry['gloss']
         instances = entry['instances']
@@ -100,7 +97,6 @@ def download_nonyt_videos(indexfile, saveto='raw_videos'):
             try:
                 download_method(video_url, saveto, video_id)
             except Exception as e:
-                pass
                 logging.error('Unsuccessful downloading - video {}'.format(video_id))
 
 
@@ -120,8 +116,6 @@ def download_yt_videos(indexfile, saveto='raw_videos'):
         gloss = entry['gloss']
         instances = entry['instances']
 
-
-
         for inst in instances:
             video_url = inst['url']
             video_id = inst['video_id']
@@ -129,7 +123,7 @@ def download_yt_videos(indexfile, saveto='raw_videos'):
             if 'youtube' not in video_url and 'youtu.be' not in video_url:
                 continue
 
-            if os.path.exists(os.path.join(saveto, video_url[-11:] + '.mp4')) or os.path.exists(os.path.join(saveto, video_url[-11:] + '.mkv')) or os.path.exists(os.path.join(saveto, video_url[-11:] + '.webm')):
+            if os.path.exists(os.path.join(saveto, video_url[-11:] + '.mp4')) or os.path.exists(os.path.join(saveto, video_url[-11:] + '.mkv')):
                 logging.info('YouTube videos {} already exists.'.format(video_url))
                 continue
             else:
@@ -149,9 +143,9 @@ def download_yt_videos(indexfile, saveto='raw_videos'):
 
 if __name__ == '__main__':
     logging.info('Start downloading non-youtube videos.')
-    download_nonyt_videos('WLASL_v0.3.json')
+    download_nonyt_videos('start_kit/asl1000.json')
 
-    # check_youtube_dl_version()
+    check_youtube_dl_version()
     logging.info('Start downloading youtube videos.')
-    download_yt_videos('WLASL_v0.3.json')
+    download_yt_videos('start_kit/asl1000.json')
 

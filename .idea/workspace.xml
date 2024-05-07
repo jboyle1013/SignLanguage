@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9c22cb22-bfe7-40ee-b08f-d101b71dcff7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/SignLanguage.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SignLanguage.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Preprocessing/filteragain.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Preprocessing/preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/Preprocessing/preprocess300.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Preprocessing/video_downloader.py" beforeDir="false" afterPath="$PROJECT_DIR$/Preprocessing/video_downloader.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +21,17 @@
         <option value="Test Suite.t" />
         <option value="Python Script" />
       </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
     </option>
   </component>
   <component name="Git.Settings">
@@ -46,29 +58,34 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.adjacency_matrix.executor&quot;: &quot;Run&quot;,
-    &quot;Python.makefeaturematrices.executor&quot;: &quot;Run&quot;,
-    &quot;Python.snl_generator.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Jordan/Documents/Machine Learning/WLASL-master&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.adjacency_matrix.executor": "Run",
+    "Python.makefeaturematrices.executor": "Run",
+    "Python.snl_generator.executor": "Debug",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/Jordan/Documents/Machine Learning/FinalProject/SignLanguage/Preprocessing",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PythonContentEntriesConfigurable",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;stardust.markdown.MarkdownSplitEditorSuppressor:keyList&quot;: [
+  "keyToStringList": {
+    "stardust.markdown.MarkdownSplitEditorSuppressor:keyList": [
     ]
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Jordan\Documents\Machine Learning\FinalProject\SignLanguage\Preprocessing" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="makefeaturematrices" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="SignLanguage" />
@@ -115,22 +132,12 @@
       <workItem from="1714751132977" duration="5801000" />
       <workItem from="1714849904552" duration="66000" />
       <workItem from="1714963119260" duration="10000" />
+      <workItem from="1715059773494" duration="977000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/snl_generator.py</url>
-          <line>339</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/SignLanguage$makefeaturematrices.coverage" NAME="makefeaturematrices Coverage Results" MODIFIED="1714758863765" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

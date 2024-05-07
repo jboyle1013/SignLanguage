@@ -190,27 +190,24 @@ def get_middle_64_indices(start_number, end_number):
 
     return middle_start_index, middle_end_index
 
-def extract_all_yt_instances(content, numbers, base_path='data'):
+def process_all(content, base_path='datasetsolid31'):
     cnt = 1
     filename = 'wc.csv'
     if not os.path.exists('videos'):
         os.mkdir('videos')
     inst_json = []
     sdict = {}
-    for _, number in enumerate(tqdm(numbers)):
-        entry = content[number]
+    for _, entry in enumerate(tqdm(content)):
         gloss = entry['gloss']
         instances = entry['instances']
         inst_size = len(instances)
         sdict[gloss] = inst_size
         index = _
         id_list = []
-        with open('data/keys.txt', "r") as f:
+        with open('datasetsolid31/keys.txt', "r") as f:
             keys = f.read().splitlines()
 
-        if gloss not in keys:
-            with open('data/keys.txt', "a") as f:
-                f.write(f"{index+1} : {gloss}\n")
+
 
 
         for inst in instances:
@@ -238,9 +235,9 @@ def extract_all_yt_instances(content, numbers, base_path='data'):
 
                 split = inst['split']
                 bbox = inst['bbox']
-                frame_base_path = f'{base_path}/{split}/frames/{video_id}'
-                labels_key_base_path = f'{base_path}/{split}/labels/keypoint/{video_id}'
-                labels_box_base_path = f'{base_path}/{split}/labels/bbox/{video_id}'
+                frame_base_path = f'{base_path}/{split}/frames/{gloss}.{video_id}'
+                labels_key_base_path = f'{base_path}/{split}/labels/keypoint/{gloss}.{video_id}'
+                labels_box_base_path = f'{base_path}/{split}/labels/bbox/{gloss}.{video_id}'
                 if not os.path.exists(frame_base_path):
                     os.makedirs(frame_base_path)
                 if not os.path.exists(labels_key_base_path):
@@ -261,10 +258,10 @@ def extract_all_yt_instances(content, numbers, base_path='data'):
                 for _, frame in enumerate(selected_frames):
                     n = _ + 1
                     kn = _ + kns
-                    cv2.imwrite(f'{base_path}/{split}/frames/{video_id}/image_{n:05}.png', frame)
+                    cv2.imwrite(f'{base_path}/{split}/frames/{gloss}.{video_id}/image_{n:05}.png', frame)
 
                     keypoint_file_path = f'pose_per_individual_videos/{video_id}/image_{kn:05}_keypoints.json'
-                    labels_box_path = f'{base_path}/{split}/labels/bbox/{video_id}/image_{n:05}_bbox.txt'
+                    labels_box_path = f'{base_path}/{split}/labels/bbox/{gloss}.{video_id}/image_{n:05}_bbox.txt'
 
                     # Set last or default keypoints
                     if not os.path.isfile(keypoint_file_path):
@@ -275,7 +272,7 @@ def extract_all_yt_instances(content, numbers, base_path='data'):
                             last_keypoints = keypoints
 
                     # Write keypoints to new location
-                    keypoint_copy_path = f'{base_path}/{split}/labels/keypoint/{video_id}/image_{n:05}_keypoints.json'
+                    keypoint_copy_path = f'{base_path}/{split}/labels/keypoint/{gloss}.{video_id}/image_{n:05}_keypoints.json'
                     with open(keypoint_copy_path, 'w') as file:
                         json.dump(keypoints, file)
 
@@ -289,10 +286,13 @@ def extract_all_yt_instances(content, numbers, base_path='data'):
                     # Write bbox to new location
                     with open(labels_box_path, 'w') as file:
                         file.write(label_str)
-
-        gloss_dict = {'number': index + 1, 'videos': id_list}
-        inst_json.append({gloss: gloss_dict})
-    with open('data/label_key.json', "w") as f:
+        if len(id_list) > 0:
+            gloss_dict = {'number': index + 1, 'videos': id_list}
+            inst_json.append({gloss: gloss_dict})
+            if gloss not in keys:
+                with open('datasetsolid31/keys.txt', "a") as f:
+                    f.write(f"{index+1} : {gloss}\n")
+    with open('datasetsolid31/label_key.json', "w") as f:
         json.dump(inst_json, f, indent=4)
         # # when OpenCV reads an image, it returns size in (h, w, c)
         #     # when OpenCV creates a writer, it requres size in (w, h).
@@ -303,7 +303,7 @@ def extract_all_yt_instances(content, numbers, base_path='data'):
             # print(cnt, dst_video_path)
 
 
-def delete_empty_subfolders(path='data'):
+def delete_empty_subfolders(path='datasetsolid31'):
     """
     Deletes empty subfolders in the specified directory.
 
@@ -321,12 +321,27 @@ def delete_empty_subfolders(path='data'):
         fpath = f'{spath}/frames'
         lpath = f'{spath}/labels'
         # Loop through the directory tree from the bottom up
+        for dirpath, dirnames, filenames in os.walk(fpath, topdown=False):
+            for dirname in dirnames:
+                full_dir_path = f'{dirpath}/{dirname}'
+                # Check if the directory is empty
+                if not os.listdir(full_dir_path):
+                    os.rmdir(full_dir_path)
+                    try:
+                        os.rmdir(f'{lpath}/{dirname}')
+                    except:
+                        pass
+                    print(f"Deleted empty folder: {full_dir_path}")
         for dirpath, dirnames, filenames in os.walk(lpath, topdown=False):
             for dirname in dirnames:
                 full_dir_path = f'{dirpath}/{dirname}'
                 # Check if the directory is empty
                 if not os.listdir(full_dir_path):
                     os.rmdir(full_dir_path)
+                    try:
+                        os.rmdir(f'{fpath}/{dirname}')
+                    except:
+                        pass
                     print(f"Deleted empty folder: {full_dir_path}")
 
 
@@ -346,11 +361,11 @@ def main():
     """
     # 1. Convert .swf, .mkv file to mp4.
     # convert_everything_to_mp4()
-    numbers = [33, 35, 45, 48, 50, 53, 67, 68, 76, 80, 139, 146, 152, 175, 197, 257, 266, 270, 271, 278]
 
-    content = json.load(open('start_kit/WLASL_v0.3.json'))
-    extract_all_yt_instances(content, numbers)
-    delete_empty_subfolders()
+
+    content = json.load(open('filtered_asl_data.json'))
+    process_all(content)
+    # delete_empty_subfolders()
 
 if __name__ == "__main__":
     main()
