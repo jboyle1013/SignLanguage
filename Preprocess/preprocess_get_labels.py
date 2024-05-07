@@ -1,6 +1,6 @@
 import os
-from PIL import Image
 import numpy as np
+from tqdm import tqdm
 
 
 '''
@@ -18,7 +18,7 @@ def get_labels(input_dir, output_dir):
     labels_dict = {}
 
     # Loop through all directories in the input directory
-    for video_num in os.listdir(input_dir):
+    for video_num in tqdm(os.listdir(input_dir),desc=f'Labels From "{input_dir}"'):
         video_path = os.path.join(input_dir, video_num)
         video_path = "labels/bbox".join(video_path.rsplit("frames", 1))
         print(video_path)
@@ -42,7 +42,7 @@ def get_labels(input_dir, output_dir):
 
 if '__main__' == __name__:
     # main data dir
-    data_dir = "../data/"
+    data_dir = "../set/"
 
     # Training Paths
     train_input_path = data_dir + 'train/frames'

@@ -1,6 +1,6 @@
 import numpy as np
 from keras.models import Sequential
-from keras.layers import Masking, Conv1D, GlobalMaxPooling1D, Dense, Dropout, InputLayer
+from keras.layers import Masking, Conv1D, GlobalMaxPooling1D, Dense, Dropout, InputLayer, BatchNormalization
 from glob import glob
 from keras.callbacks import TensorBoard
 import re
@@ -26,7 +26,6 @@ class Model():
     def create_model(self, sample_shape, num_classes):
         self.model = Sequential([
             InputLayer(sample_shape),
-            #Masking(mask_value=0.0, input_shape=input_shape),
             Conv1D(64, kernel_size=3, activation='relu', padding='same',kernel_initializer='he_uniform'),
             Conv1D(64, kernel_size=3, activation='relu', padding='same',kernel_initializer='he_uniform'),
             GlobalMaxPooling1D(),
@@ -39,9 +38,9 @@ class Model():
 
     def fit_model(self, X_train, y_train, validation = None):
         if validation != None:
-            self.model.fit(X_train, y_train, epochs=200, callbacks=[tbCallbacks], batch_size=X_train.shape[0], validation_data=validation, validation_batch_size=validation[0].shape[0])
+            self.model.fit(X_train, y_train, epochs=400, callbacks=[tbCallbacks], batch_size=X_train.shape[0], validation_data=validation, validation_batch_size=validation[0].shape[0])
         else:
-            self.model.fit(X_train, y_train, epochs=200, callbacks=[tbCallbacks], batch_size=X_train.shape[0])
+            self.model.fit(X_train, y_train, epochs=400, callbacks=[tbCallbacks], batch_size=X_train.shape[0])
             
         model_list = glob("./model_*")
         if len(model_list) != 0:
@@ -100,23 +99,29 @@ def get_one_hot_encoded_y_and_corresponding_list(y, num_classes = None):
     return y_one_hot, y_label_list, y_label_dic
 
 if '__main__' == __name__:
-    data_dir = "../data/"
+    data_dir = "../set/"
     input_train_dir = data_dir + "train/"
     input_test_dir = data_dir + "test/"
     input_val_dir = data_dir + "val/"
     
+    # get training data
     X_train, y_train = get_X_and_y_from_dir(input_train_dir)
     
+    # number of classes
     num_classes = len(collections.Counter(y_train.flatten()).items())
     
+    # get testing and validation data
     X_test, y_test = get_X_and_y_from_dir(input_test_dir)
     X_val, y_val = get_X_and_y_from_dir(input_val_dir)
     
+    # turn y traing into one hot encoded
     y_one_hot_train, y_train_label_one_hot_list, y_train_label_one_hot_dict = get_one_hot_encoded_y_and_corresponding_list(y_train)
-    #y_val_corresponding = np.array([y_train_label_one_hot_dict[label] for label in y_val.flatten()])
-    #y_one_hot_val = to_categorical(y_val_corresponding, num_classes=num_classes).astype(int)
-    y_one_hot_val, _, _ = get_one_hot_encoded_y_and_corresponding_list(y_val, num_classes)
-    #y_one_hot_test, y_test_label_one_hot_list,_ = get_one_hot_encoded_y_and_corresponding_list(y_test)
+    
+    # correspond y validation values with new labels from y_train so they can be one hot encoded 
+    y_val_corresponding = np.array([y_train_label_one_hot_dict[label] for label in y_val.flatten()])
+    
+    # finish one hot encoding y validation 
+    y_one_hot_val = to_categorical(y_val_corresponding, num_classes=num_classes).astype(int)
 
     print(f"Num classes = {num_classes}\n") 
     print(f"X_train {X_train.shape}")
@@ -127,7 +132,7 @@ if '__main__' == __name__:
     print(f"y_test {y_test.shape}")
     print(f"y_val {y_val.shape}")
     
-    
+    # create and train model with validation at each epoch
     model = Model()
     sample_shape = (X_train.shape[1],X_train.shape[2])
     model.create_model(sample_shape, num_classes)

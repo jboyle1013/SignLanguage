@@ -44,7 +44,7 @@ def mediapipe_detection(image, model):
     return image, results
 
 # Go through all the frames in a folder and make extract feautres and pad.
-def process_video_and_pad_features(video_folder, model, target_length=64):
+def process_video_and_pad_features(video_folder, model, target_length=143):
     features_list = []
     # Loop through each frame file in the sorted order
     frame_files = sorted([f for f in os.listdir(video_folder) if f.endswith(('.png', '.jpg', '.jpeg'))])
@@ -88,7 +88,7 @@ if '__main__' == __name__:
     holistic = mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5)
     
     # main data dir
-    data_dir = "../data/"
+    data_dir = "../set/"
     
     # get and pad mediapipe features and save in pFeatures folders the npy arrays of features
     for dir in ['train/','test/','val/']:

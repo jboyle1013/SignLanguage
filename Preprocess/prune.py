@@ -11,7 +11,13 @@ import os
 from glob import glob
 from shutil import copytree
 from tqdm import tqdm
+import mediapipe as mp
+from mediapipe_preprocess_get_features import get_landmark_points, mediapipe_detection
+import cv2
 
+# Make mediapipe Model
+mp_holistic = mp.solutions.holistic
+mediapipe_model = mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
 # returns a dictionary with keys as labels and values as lists of the sequence IDs
 # that have that label 
@@ -19,7 +25,7 @@ def get_labels_and_sequence_IDs(input_dir):
     label_sequence_dic = {}
     for sequence_ID_filepath in glob(input_dir + "labels/bbox/*"):
         sequence_ID = os.path.basename(sequence_ID_filepath)
-        first_bbox_filepath = glob(sequence_ID_filepath + "\image_*_bbox.txt")[0]
+        first_bbox_filepath = glob(sequence_ID_filepath + "/image_*_bbox.txt")[0]
         with open(first_bbox_filepath) as first_image_bbox_file:
             first_line = first_image_bbox_file.readline()
             label = first_line.split(" ")[0]
@@ -29,6 +35,8 @@ def get_labels_and_sequence_IDs(input_dir):
             else:
                 label_sequence_dic[label] = [sequence_ID]
     return label_sequence_dic
+
+
 
 # gets top 20 labels and number of sequences having each of those labels as a list of tuples
 # with label first and number of sequences second.
@@ -63,7 +71,7 @@ def get_labels_lengths_and_sequences_from_dict_matching_ones_in_list(top_20_labe
     for i,(label, _) in enumerate(top_20_label_and_length_list):
         sequences_for_label = label_sequence_dic[label]
         num_of_sequences_for_label_in_dict = len(sequences_for_label)
-        label_and_length_from_dict[label] = num_of_sequences_for_label_in_dict
+        label_and_length_from_dict[label] = (num_of_sequences_for_label_in_dict, sequences_for_label)
         matching_sequence_IDs.extend(sequences_for_label)
         if print_data:
             print(f"{i}: Label = {label}, Number of sequences = {num_of_sequences_for_label_in_dict} Sequecnes: {sequences_for_label}")
@@ -82,19 +90,38 @@ def copy_frames_and_labels_matching_list_of_IDs(input_dir, output_dir, IDs_list)
     input_frames_dir = input_dir + "frames/"
     input_frames_paths = [input_frames_dir + id for id in IDs_list]
     output_frames_dir = output_dir + "frames/"
+    max = 0
     for input_frames_path in tqdm(input_frames_paths, desc=f'Copying to "{output_dir}"'):
         sequence_ID = os.path.basename(input_frames_path)
         output_frames_path = output_frames_dir + f"{sequence_ID}"
         copytree(src=input_frames_path, dst=output_frames_path)
         labels_bbox_input_path = input_dir + f"labels/bbox/{sequence_ID}"
         labels_bbox_output_path = output_dir + f"labels/bbox/{sequence_ID}"
-        copytree(src=labels_bbox_input_path,dst=labels_bbox_output_path)    
+        copytree(src=labels_bbox_input_path,dst=labels_bbox_output_path)
+        remove_extra_frames(output_frames_path)
+        new = len(os.listdir(output_frames_path))
+        if new > max:
+            max = new
+    print(f"\nmax frames = {max}\n")
+    
+    
+def remove_extra_frames(frames_path):
+    frame_paths = glob(frames_path + '/*')
+    for frame_path in frame_paths:
+        image = cv2.imread(frame_path)
+        _, results = mediapipe_detection(image, mediapipe_model)
+        features = get_landmark_points(results)
+        if features[132:].any() == False:
+            os.remove(frame_path)
+            
+        
     
 
 if '__main__' == __name__:
-    input_dir_train = "../data/train/"
-    input_dir_test = "../data/test/"
-    input_dir_val = "../data/val/"
+    data_dir = "../datasolid20untrimmed/"
+    input_dir_train = data_dir + "train/"
+    input_dir_test = data_dir + "test/"
+    input_dir_val = data_dir + "val/"
     
     train_dict = get_labels_and_sequence_IDs(input_dir_train)
     test_dict = get_labels_and_sequence_IDs(input_dir_test)
